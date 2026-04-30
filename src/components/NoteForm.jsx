@@ -1,13 +1,51 @@
 import { useState } from "react";
-const NoteForm = () => {
-  const [title, setTitle] = useState("");
-  const [priority, setPriority] = useState("medium");
-  const [category, setCategory] = useState("personal");
-  const [description, setDescription] = useState("");
+
+const NoteForm = ({ notes, setNotes }) => {
+  const [formData, setFormData] = useState({
+    title: "",
+    priority: "medium",
+    category: "personal",
+    description: "",
+  });
+
+  const [isFormVisible, setIsFormVisible] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newNote = {
+      id: Date.now(),
+      ...formData,
+    };
+
+    setNotes([newNote, ...notes]);
+
+    setFormData({
+      title: "",
+      priority: "medium",
+      category: "personal",
+      description: "",
+    });
+  };
 
   return (
     <>
-      <form className="mb-6">
+      {/* Toggle button*/}
+      <button
+        onClickCapture={() => setIsFormVisible(!isFormVisible)}
+        className="w-full py-2 mb-4 bg-gray-100 border-gray-300 text-gray-500 rounded-lg cursor-pointer hover:bg-gray-200"
+      >
+        {isFormVisible ? "Hide Form" : "Add New Note"}
+      </button>
+
+      {isFormVisible && (<form onSubmit={handleSubmit} className="mb-6">
         <div className="mb-4">
           <label
             htmlFor="title"
@@ -18,8 +56,9 @@ const NoteForm = () => {
           <input
             type="text"
             id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
             className="w-full border p-2 rounded-md"
           />
         </div>
@@ -29,8 +68,9 @@ const NoteForm = () => {
           </label>
           <select
             id="priority"
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
+            name="priority"
+            value={formData.priority}
+            onChange={handleChange}
             className="w-full border p-2 rounded-md"
           >
             <option value="low">Low</option>
@@ -44,8 +84,9 @@ const NoteForm = () => {
           </label>
           <select
             id="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
             className="w-full border p-2 rounded-md"
           >
             <option value="personal">personal</option>
@@ -62,15 +103,17 @@ const NoteForm = () => {
           </label>
           <textarea
             id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
             className="w-full border p-2 rounded-md"
           />
         </div>
         <button className="w-full bg-gray-700 text-white p-2 rounded-md cursor-pointer hover:bg-gray-600 transition-colors">
           Add Note
         </button>
-      </form>
+      </form>)}
+      
     </>
   );
 };
