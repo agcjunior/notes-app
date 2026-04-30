@@ -1,4 +1,4 @@
-const NoteList = ({notes}) => {
+const NoteList = ({notes, deleteNote}) => {
   if (notes.length === 0) {
     return <p className="text-center text-gray-500">No notes yet. Add one above! 📝</p>;
   }
@@ -18,6 +18,12 @@ const NoteList = ({notes}) => {
             </span>
             <span className="text-sm text-gray-500">{note.category}</span>
           </div>
+          <button 
+            onClick={() => deleteNote(note.id)}
+            className="mt-2 text-red-500 hover:text-red-700 text-sm"
+          >
+            Delete
+          </button>
         </div>
       ))}
     </div>
